@@ -1,8 +1,10 @@
 from typing import Any
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, Depends
 
-from app.models.predict import PredictRequest, PredictResponse
+from app.models.predict import PredictResponse, PredictRequest
+from app.models.similarity import TextSimilarityRequest, TextSimilarityResponse
+from app.services.similarity import SimilarityService
 
 api_router = APIRouter()
 
@@ -17,3 +19,18 @@ async def predict(request: Request, payload: PredictRequest) -> Any:
 
     predict_value = model.predict(input_text)
     return PredictResponse(result=predict_value)
+
+
+@api_router.post("/similarity", response_model=TextSimilarityResponse)
+async def similarity(payload: TextSimilarityRequest, service: SimilarityService = Depends(SimilarityService)) \
+        -> TextSimilarityResponse:
+
+    score = service.score(first_text=payload.first_text,
+                          second_text=payload.second_text,
+                          algo=payload.algo)
+
+    return TextSimilarityResponse(first_text=payload.first_text,
+                                  second_text=payload.second_text,
+                                  algo=payload.algo,
+                                  score=score)
+
