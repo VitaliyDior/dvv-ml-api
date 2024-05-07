@@ -1,4 +1,4 @@
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -7,7 +7,7 @@ class Settings(BaseSettings):
 
     MODEL_PATH: str = "app/ml_model/model.pth"
 
-    class Config:
+    class ConfigDict:
         case_sensitive = True
 
 
