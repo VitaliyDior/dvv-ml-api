@@ -32,8 +32,8 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Train
         run: python app/classification_train.py
+      - uses: iterative/setup-cml@v2
       - name: Evaluation
-        uses: iterative/setup-cml@v2
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
