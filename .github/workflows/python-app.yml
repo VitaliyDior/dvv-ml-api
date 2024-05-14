@@ -65,7 +65,7 @@ jobs:
         run: |
           git config --local user.email "test@github.com"
           git config --local user.name "GitHub Action test"
-          git add conf_matrix.png
+          git add .
           git commit -m "Adding conf_matrix.png"
 
       - name: Push changes
