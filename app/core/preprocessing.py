@@ -103,6 +103,12 @@ def text_preprocessing(text: str, pipeline: Tuple[str], hooks: Optional[Preproce
     return local_text
 
 
+# apply clear with default pipeline with no hooks
+def clear_text(text: str) -> str:
+    tokens = text_preprocessing(text, ('clear', 'tokenize', 'stop-words', 'stemming'), {})
+    return ' '.join(tokens)
+
+
 # example hook to be called before text clear step
 def before_clear_hook(text: str) -> str:
     print('Im hooked before clear')
@@ -116,12 +122,12 @@ def after_stemming_hook(words: List[str]) -> List[str]:
     return [word for word in words if 'ru' not in word]
 
 
-# text to process
-text = 'hello<b>,~!me you were running wishes developers </b> 195$ 2024-04-10'
-# text processing pipeline steps
-pipe = ('clear', 'tokenize', 'stop-words', 'stemming')
-# example text processing hooks configuration dict
-hooks = {'clear': {'before': before_clear_hook}, 'stemming': {'after': after_stemming_hook}}
-
-# example usage
-print(text_preprocessing(text, pipe, hooks))
+# # text to process
+# text = 'hello<b>,~!me you were running wishes developers </b> 195$ 2024-04-10'
+# # text processing pipeline steps
+# pipe = ('clear', 'tokenize', 'stop-words', 'stemming')
+# # example text processing hooks configuration dict
+# hooks = {'clear': {'before': before_clear_hook}, 'stemming': {'after': after_stemming_hook}}
+#
+# # example usage
+# print(text_preprocessing(text, pipe, hooks))
