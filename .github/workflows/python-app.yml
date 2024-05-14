@@ -10,30 +10,69 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.12"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
-        pytest
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Train
+        run: python app/classification_train.py
+
+      - name: Evaluation
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "## Model Metrics" > static/misc/report.md
+          cat static/misc/metrics.txt > static/misc/report.md
+
+          echo '## Confusion Matrix Plot' >> static/misc/report.md
+          echo '![Confusion Matrix](static/misc/conf_matrix.png)' >> static/misc/report.md
+
+      - name: PR comment with file
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: static/misc/report.md
+
+      - name: Upload Artifacts
+        id: artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: model
+          path: static/**/*
+          compression-level: 0
+          overwrite: true
+
+      - name: Storing Artifact Urls
+        run: echo '${{ steps.artifacts.outputs.artifact-url }}' > artifacts_path.txt
+      - name: Commiting Artifact Urls
+        run: |
+          git config --local user.email "test@github.com"
+          git config --local user.name "GitHub Action test"
+          git add artifacts_path.txt
+          git commit -m "Adding artifact urls"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          branch: ${{ github.head_ref || github.ref_name }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          force: true
+
+
