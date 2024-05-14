@@ -2,9 +2,11 @@ from typing import Any
 
 from fastapi import APIRouter, Request, Depends
 
+from app.models.classification import TextClassificationRequest, TextClassificationResponse
 from app.models.predict import PredictResponse, PredictRequest
 from app.models.similarity import TextSimilarityRequest, TextSimilarityResponse
 from app.services.similarity import SimilarityService
+from app.services.classification import TextClassificationService
 
 api_router = APIRouter()
 
@@ -34,3 +36,8 @@ async def similarity(payload: TextSimilarityRequest, service: SimilarityService 
                                   algo=payload.algo,
                                   score=score)
 
+
+@api_router.post("/classification", response_model=TextClassificationResponse)
+async def classification(payload: TextClassificationRequest, service: TextClassificationService = Depends(TextClassificationService)) \
+        -> TextClassificationResponse:
+    return service.classify('hello')
