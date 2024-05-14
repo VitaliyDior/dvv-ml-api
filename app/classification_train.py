@@ -25,7 +25,7 @@ dataset_file = datasets_path + '/imdb.csv'
 vectorizer_path = misc_path + '/tfidf_vectorizer.pickle'
 scaler_file = misc_path + '/min_max_scaler.pickle'
 encoder_file = misc_path + '/label_encoder.pickle'
-conf_matrix_img_file = '../conf_matrix.png'
+conf_matrix_img_file = misc_path + '/conf_matrix.png'
 metrics_file = misc_path + '/metrics.txt'
 model_file = models_path + '/random_forest_model.pickle'
 

@@ -43,7 +43,7 @@ jobs:
           cat static/misc/metrics.txt > static/misc/report.md
 
           echo '## Confusion Matrix Plot' >> static/misc/report.md
-          echo '![Confusion Matrix](conf_matrix.png)' >> static/misc/report.md
+          echo '![Confusion Matrix](static/misc/conf_matrix.png)' >> static/misc/report.md
 
       - name: PR comment with file
         uses: thollander/actions-comment-pull-request@v2
