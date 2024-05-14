@@ -43,7 +43,7 @@ jobs:
           cat static/misc/metrics.txt > static/misc/report.md
 
           echo '## Confusion Matrix Plot' >> static/misc/report.md
-          echo '![Confusion Matrix](static/misc/conf_matrix.png)' >> static/misc/report.md
+          echo '![Confusion Matrix](conf_matrix.png)' >> static/misc/report.md
 
       - name: PR comment with file
         uses: thollander/actions-comment-pull-request@v2
@@ -65,8 +65,8 @@ jobs:
         run: |
           git config --local user.email "test@github.com"
           git config --local user.name "GitHub Action test"
-          git add artifacts_path.txt
-          git commit -m "Adding artifact urls"
+          git add conf_matrix.png
+          git commit -m "Adding conf_matrix.png"
 
       - name: Push changes
         uses: ad-m/github-push-action@master
