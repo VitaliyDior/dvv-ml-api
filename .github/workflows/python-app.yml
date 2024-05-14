@@ -43,7 +43,7 @@ jobs:
           echo '## Confusion Matrix Plot' >> report.md
           echo '![Confusion Matrix](static/misc/conf_matrix.png)' >> report.md
 
-          cml comment create report.md
+          cml comment create --pr --publish report.md
       - name: Upload Artifacts
         id: artifacts
         uses: actions/upload-artifact@v4
