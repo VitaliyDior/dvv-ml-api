@@ -10,6 +10,18 @@ import matplotlib.pyplot as plt
 
 from core.preprocessing import text_preprocessing
 from core.config import settings
+import nltk
+import ssl
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
+
+nltk.download('punkt')
+nltk.download('stopwords')
+
 
 dataset_file = settings.STATIC_FILES_PATH + '/datasets/imdb.csv'
 vectorizer_path = settings.VECTORIZER_FILE

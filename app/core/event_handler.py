@@ -1,6 +1,8 @@
 import os
 import pickle
 import zipfile
+import ssl
+import nltk
 from typing import Callable
 
 import requests
@@ -38,9 +40,22 @@ def _shutdown_model(app: FastAPI) -> None:
 def start_app_handler(app: FastAPI, settings: Settings) -> Callable:
     def startup() -> None:
         logger.info("Staring up!!!!")
+        _download_nltk()
         _download_model(settings)
         _startup_model(app, settings)
+
     return startup
+
+
+def _download_nltk() -> None:
+    try:
+        _create_unverified_https_context = ssl._create_unverified_context
+    except AttributeError:
+        pass
+    else:
+        ssl._create_default_https_context = _create_unverified_https_context
+    nltk.download('punkt')
+    nltk.download('stopwords')
 
 
 def _download_model(settings) -> None:
@@ -75,4 +90,5 @@ def _download_model(settings) -> None:
 def stop_app_handler(app: FastAPI) -> Callable:
     def shutdown() -> None:
         _shutdown_model(app)
+
     return shutdown
