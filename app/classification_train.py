@@ -1,38 +1,34 @@
-import sys
-import os
 import pandas as pd
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pickle
 
-from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, f1_score
-from sklearn.model_selection import train_test_split, StratifiedKFold, GridSearchCV
-from sklearn.preprocessing import MaxAbsScaler, LabelEncoder
-import xgboost as xgb
-from core.preprocessing import clear_text
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.preprocessing import LabelEncoder, MaxAbsScaler
 import matplotlib.pyplot as plt
 
-# print(os.getcwd())
-# dataset_path = sys.argv[1]
-# model_path = sys.argv[2]
-static_assets_path = os.getcwd() + '/static'
-datasets_path = static_assets_path + '/datasets'
-models_path = static_assets_path + '/models'
-misc_path = static_assets_path + '/misc'
+from core.preprocessing import text_preprocessing
+from core.config import settings
 
-dataset_file = datasets_path + '/imdb.csv'
-vectorizer_path = misc_path + '/tfidf_vectorizer.pickle'
-scaler_file = misc_path + '/min_max_scaler.pickle'
-encoder_file = misc_path + '/label_encoder.pickle'
-conf_matrix_img_file = misc_path + '/conf_matrix.png'
-metrics_file = misc_path + '/metrics.txt'
-model_file = models_path + '/random_forest_model.pickle'
+dataset_file = settings.STATIC_FILES_PATH + '/datasets/imdb.csv'
+vectorizer_path = settings.VECTORIZER_FILE
+scaler_file = settings.SCALER_FILE
+encoder_file = settings.LABEL_ENCODER_FILE
+conf_matrix_img_file = settings.STATIC_FILES_PATH + '/misc/conf_matrix.png'
+metrics_file = settings.STATIC_FILES_PATH + '/misc/metrics.txt'
+model_file = settings.MODEL_PATH_FILE
+
+
+def cleanup_text(txt: str) -> str:
+    return ' '.join(text_preprocessing(txt, ('clear', 'tokenize', 'stop-words', 'stemming'), {}))
+
 
 print('Reading dataset....')
 df = pd.read_csv(dataset_file)
 print('Cleanup corpus....')
-df['review_cleaned'] = df['review'].tolist()
+
+df['review_cleaned'] = df['review'].apply(cleanup_text).tolist()
 
 print('Vectorize corpus....')
 tfidf = TfidfVectorizer(lowercase=True,
@@ -85,7 +81,6 @@ disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=encoder.classe
 disp.plot()
 plt.savefig(conf_matrix_img_file, dpi=120)
 
-
 print('Storing vectorizer....')
 pickle.dump(tfidf, open(vectorizer_path, 'wb'))
 print('Storing scaler....')
@@ -97,4 +92,3 @@ pickle.dump(model, open(model_file, 'wb'))
 print('All done...')
 with open(metrics_file, "w") as outfile:
     outfile.write(f"\nAccuracy = {round(accuracy, 2)}, F1 Score = {round(f1, 2)}\n\n")
-

@@ -38,6 +38,6 @@ async def similarity(payload: TextSimilarityRequest, service: SimilarityService 
 
 
 @api_router.post("/classification", response_model=TextClassificationResponse)
-async def classification(payload: TextClassificationRequest, service: TextClassificationService = Depends(TextClassificationService)) \
+async def classification(request: Request, payload: TextClassificationRequest) \
         -> TextClassificationResponse:
-    return service.classify('hello')
+    return TextClassificationService(request.app).classify(payload.text)
