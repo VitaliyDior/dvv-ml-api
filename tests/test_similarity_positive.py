@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from fastapi.testclient import TestClient
 
-from app.core.config import settings
+from app import settings
 from app.models.similarity import SimilarityAlgorithm
 
 first_text = "The bottle is empty."
