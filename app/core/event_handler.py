@@ -8,6 +8,7 @@ from typing import Callable
 import requests
 from fastapi import FastAPI
 from fastapi.logger import logger
+from gensim.models import Doc2Vec
 
 from app.core.config import Settings
 
@@ -28,6 +29,10 @@ def _startup_model(app: FastAPI, settings: Settings) -> None:
     file = open(settings.LABEL_ENCODER_FILE, 'rb')
     app.state.label_encoder = pickle.load(file)
     file.close()
+
+    # file = open(settings.DOC2VEC_MODEL_PATH_FILE, 'rb')
+    app.state.d2v_model = Doc2Vec.load(settings.DOC2VEC_MODEL_PATH_FILE)
+    # file.close()
 
 
 def _shutdown_model(app: FastAPI) -> None:

@@ -14,6 +14,8 @@ class Settings(BaseSettings):
     MODEL_PATH: str = STATIC_FILES_PATH + "/models"
 
     MODEL_PATH_FILE: str = MODEL_PATH + "/random_forest_model.pickle"
+    DOC2VEC_MODEL_PATH_FILE: str = MODEL_PATH + "/doc2vec_crypto_clothing"
+
     LABEL_ENCODER_FILE: str = MISC_FILES_PATH + "/label_encoder.pickle"
     SCALER_FILE: str = MISC_FILES_PATH + "/min_max_scaler.pickle"
     VECTORIZER_FILE: str = MISC_FILES_PATH + "/tfidf_vectorizer.pickle"

@@ -1,2 +1,4 @@
 *
 !.gitignore
+!doc2vec_crypto_clothing
+!doc2vec_crypto_clothing.dv.vectors.npy
