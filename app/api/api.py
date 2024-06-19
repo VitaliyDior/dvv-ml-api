@@ -1,12 +1,14 @@
-from typing import Any
+from typing import Any, List
 
 from fastapi import APIRouter, Request, Depends
 
 from app.models.classification import TextClassificationRequest, TextClassificationResponse
 from app.models.predict import PredictResponse, PredictRequest
 from app.models.similarity import TextSimilarityRequest, TextSimilarityResponse
+from app.models.topics import TextTopicsRequest
 from app.services.similarity import SimilarityService
 from app.services.classification import TextClassificationService
+from app.services.text_topics import TextTopicsService
 
 api_router = APIRouter()
 
@@ -41,3 +43,7 @@ async def similarity(payload: TextSimilarityRequest, service: SimilarityService 
 async def classification(request: Request, payload: TextClassificationRequest) \
         -> TextClassificationResponse:
     return TextClassificationService(request.app).classify(payload.text)
+
+@api_router.post("/topics")
+async def topics(request: Request, payload: TextTopicsRequest) -> List[List[str]]:
+    return TextTopicsService(request.app).split_to_topics(payload.text)
