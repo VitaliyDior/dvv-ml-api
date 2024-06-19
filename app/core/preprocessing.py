@@ -77,7 +77,7 @@ def apply_hook(hooked_text: str | List[str], step: str, side: HookSide, hooks: O
 
 
 # **** core text_preprocessing function ****
-def text_preprocessing(text: str, pipeline: Tuple[str], hooks: Optional[PreprocessingHooksConfig] = None):
+def text_preprocessing(text: str, pipeline: List[TextPreprocessingStep], hooks: Optional[PreprocessingHooksConfig] = None) -> str:
     local_text = text
 
     if TextPreprocessingStep.Clear.value in pipeline:

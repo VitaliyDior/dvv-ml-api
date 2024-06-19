@@ -6,6 +6,7 @@ import nltk
 from typing import Callable
 
 import requests
+import spacy
 from fastapi import FastAPI
 from fastapi.logger import logger
 from gensim.models import Doc2Vec
@@ -33,6 +34,8 @@ def _startup_model(app: FastAPI, settings: Settings) -> None:
     # file = open(settings.DOC2VEC_MODEL_PATH_FILE, 'rb')
     app.state.d2v_model = Doc2Vec.load(settings.DOC2VEC_MODEL_PATH_FILE)
     # file.close()
+
+    app.state.spacy = spacy.load("en_core_web_sm")
 
 
 def _shutdown_model(app: FastAPI) -> None:
