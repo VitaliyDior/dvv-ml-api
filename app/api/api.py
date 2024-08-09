@@ -2,7 +2,8 @@ from typing import Any, List
 
 from fastapi import APIRouter, Request, Depends
 
-from app.models.classification import TextClassificationRequest, TextClassificationResponse
+from app.models.classification import TextClassificationRequest, TextClassificationResponse, \
+    TextClassificationBertResponse
 from app.models.predict import PredictResponse, PredictRequest
 from app.models.preprocessing import TextPreprocessingRequest, TextPreprocessingResponse, \
     PreprocessingQueryParams
@@ -59,3 +60,8 @@ async def preprocess(request: Request, payload: TextPreprocessingRequest,
     response.preprocessed_text = TextPreprocessingService(request.app).preprocess(payload.input_text, query.method,
                                                                                   query.pipeline)
     return response
+
+
+@api_router.post("/bert/classification", response_model=TextClassificationBertResponse)
+async def classification(request: Request, payload: TextClassificationRequest) -> TextClassificationResponse:
+    return TextClassificationService(request.app).classify_bert(payload.text)
