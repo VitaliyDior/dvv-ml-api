@@ -10,6 +10,7 @@ import spacy
 from fastapi import FastAPI
 from fastapi.logger import logger
 from gensim.models import Doc2Vec
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
 from app.core.config import Settings
 
@@ -36,6 +37,9 @@ def _startup_model(app: FastAPI, settings: Settings) -> None:
     # file.close()
 
     app.state.spacy = spacy.load("en_core_web_sm")
+
+    app.state.bert_tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+    app.state.bert_model = AutoModelForSequenceClassification.from_pretrained(settings.BERT_MODEL_PATH)
 
 
 def _shutdown_model(app: FastAPI) -> None:

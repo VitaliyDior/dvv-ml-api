@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     VECTORIZER_FILE: str = MISC_FILES_PATH + "/tfidf_vectorizer.pickle"
     ARTIFACTS_PATH: str = PROJECT_ROOT_PATH + "/var"
     ARTIFACTS_PATH_FILE: str = ARTIFACTS_PATH + "/artifacts.zip"
+    BERT_MODEL_PATH: str = MODEL_PATH + '/bert-google-nlp-classifier'
+
     LOG_LEVEL: str = 'debug'
     DOTENV_PATH: str | None = None
     GITHUB_ARTIFACT_ID: str | None = None

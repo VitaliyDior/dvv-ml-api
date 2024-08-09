@@ -1,4 +1,4 @@
-from typing import Optional, SupportsFloat
+from typing import Optional, SupportsFloat, List
 
 from pydantic import BaseModel, StrictStr, Field, PositiveFloat
 
@@ -23,4 +23,27 @@ class TextClassificationResponse(BaseModel):
                              title="probability",
                              description="Probability of the label assigned to the classified text",
                              json_schema_extra={'example': "0.95"}
+                             )
+
+
+class TextClassificationBertLabel(BaseModel):
+    label: StrictStr = Field(...,
+                             title="label",
+                             min_length=1,
+                             description="Label assigned to text by classificator",
+                             json_schema_extra={'example': "positive"}
+                             )
+    probability: Optional[PositiveFloat] = Field(...,
+                                                 title="probability",
+                                                 description="Probability of the label assigned to the classified text",
+                                                 json_schema_extra={'example': "0.95"}
+                                                 )
+
+
+class TextClassificationBertResponse(BaseModel):
+    labels: List[TextClassificationBertLabel] = Field(...,
+                             title="label",
+                             min_length=1,
+                             description="Label assigned to text by classificator",
+                             json_schema_extra={'example': "News"}
                              )
